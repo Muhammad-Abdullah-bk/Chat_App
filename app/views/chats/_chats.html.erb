@@ -1,0 +1,21 @@
+<li>
+  <div class="panel panel-default" data-conversation-id="<%= chat.id %>" style="margin-bottom: 10px">
+    <div class="panel-heading" style="display: flex;align-items: center;justify-content: space-between;background-color: lightgrey;padding-left: 10px;">
+      <%= link_to chat.opposed_user(user).email, '', class: 'toggle-window' %>
+      <%= link_to "x", close_chat_path(chat), class: "btn btn-default btn-xs pull-right", remote: true, method: :post %>
+    </div>
+    <div class="panel-body" >
+      <div class="messages-list">
+        <ul>
+          <%= render 'chats/chat_content', messages: chat.messages, user: user %>
+        </ul>
+      </div>
+      <form class="new_message">
+        <input name="chat_id" type="hidden" value="<%= chat.id %>">
+        <input name="user_id" type="hidden" value="<%= user.id %>">
+        <textarea name="body" class="form-control"></textarea>
+        <input type="submit" class="btn btn-success" value="Send">
+      </form>
+    </div>
+  </div>
+</li>

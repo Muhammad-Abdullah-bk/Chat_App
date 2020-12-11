@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_141805) do
+ActiveRecord::Schema.define(version: 2020_12_10_063739) do
 
   create_table "chats", force: :cascade do |t|
     t.integer "recipient_id"
@@ -20,6 +20,16 @@ ActiveRecord::Schema.define(version: 2020_12_09_141805) do
     t.index ["recipient_id", "sender_id"], name: "index_chats_on_recipient_id_and_sender_id", unique: true
     t.index ["recipient_id"], name: "index_chats_on_recipient_id"
     t.index ["sender_id"], name: "index_chats_on_sender_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "body"
+    t.integer "user_id", null: false
+    t.integer "chat_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "room_messages", force: :cascade do |t|
@@ -53,6 +63,8 @@ ActiveRecord::Schema.define(version: 2020_12_09_141805) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "messages", "chats"
+  add_foreign_key "messages", "users"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
 end
