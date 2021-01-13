@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_063739) do
+ActiveRecord::Schema.define(version: 2020_12_15_090605) do
 
   create_table "chats", force: :cascade do |t|
     t.integer "recipient_id"
@@ -20,6 +20,31 @@ ActiveRecord::Schema.define(version: 2020_12_10_063739) do
     t.index ["recipient_id", "sender_id"], name: "index_chats_on_recipient_id_and_sender_id", unique: true
     t.index ["recipient_id"], name: "index_chats_on_recipient_id"
     t.index ["sender_id"], name: "index_chats_on_sender_id"
+  end
+
+  create_table "group_chat_users", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "groupChat_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["groupChat_id"], name: "index_group_chat_users_on_groupChat_id"
+    t.index ["user_id"], name: "index_group_chat_users_on_user_id"
+  end
+
+  create_table "group_chats", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "group_messages", force: :cascade do |t|
+    t.text "body"
+    t.integer "user_id", null: false
+    t.integer "groupChat_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["groupChat_id"], name: "index_group_messages_on_groupChat_id"
+    t.index ["user_id"], name: "index_group_messages_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -63,6 +88,10 @@ ActiveRecord::Schema.define(version: 2020_12_10_063739) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "group_chat_users", "groupChats"
+  add_foreign_key "group_chat_users", "users"
+  add_foreign_key "group_messages", "groupChats"
+  add_foreign_key "group_messages", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "room_messages", "rooms"
